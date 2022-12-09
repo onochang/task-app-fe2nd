@@ -1,22 +1,34 @@
 <template>
 
   <header class="header">
-    <fa class="fa-bars" :icon="['fas', 'bars']" />
+    <fa class="fa-bars" :icon="['fas', 'bars']" @click="toggleSideNav"/>
     <fa class="fa-sign-out" :icon="['fas', 'arrow-right-from-bracket']" />
   </header>
+  <!-- storeのstate内のsideNavの状態を取得(Vuex) -->
+  <SideNav v-if="$store.state.sideNav"/>
 
   <main>
     <router-view/>
   </main>
-
-
 </template>
 
 <script>
 import 'normalize.css'
+// コンポーネンツからSideNavをインポート
+import SideNav from './components/SideNav.vue'
+// storeのactionsを参照するためにmapActions関数をImport
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    // インポートしたSideNavをコンポーネントとして定義
+    SideNav
+  },
+  methods: {
+    // mapActionsでstore内のactionsのtoggleSideNavを呼び出してくる
+    ...mapActions(['toggleSideNav'])
+  }
 }
 </script>
 
