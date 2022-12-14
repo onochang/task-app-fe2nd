@@ -1,8 +1,10 @@
 <template>
     <div class="side-nav">
         <div class="user">
-            <img src="../assets/cat.jpg" alt="" class="user__img">
-            <p class="user__name">ユーザー</p>
+            <img v-if="photoURL" :src="photoURL" alt="" class="user__img">
+            <img v-else src="../assets/cat.jpg" alt="" class="user__img">
+            <p v-if="userName" class="user__name">{{userName}}</p>
+            <p v-else class="user__name">ユーザー</p>
         </div>
         <nav>
             <!-- サーバーへのリクエストを行わずにページを返す（SPA） -->
@@ -11,17 +13,21 @@
             <router-link to="/list" class="side-nav__link" @click="toggleSideNav">To Do List</router-link>
         </nav>
     </div>
-    
     <div class="overlay" @click="toggleSideNav"></div>
-    
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
+
 export default {
     name: 'SideNav',
     methods: {
         ...mapActions(['toggleSideNav'])
+    },
+    // Storeのgettersはcomputedで取得できる。
+    computed: {
+        ...mapGetters(['userName', 'photoURL'])
     }
 }
 </script>

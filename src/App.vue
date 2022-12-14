@@ -2,7 +2,7 @@
 
   <header class="header">
     <fa class="fa-bars" :icon="['fas', 'bars']" @click="toggleSideNav"/>
-    <fa class="fa-sign-out" :icon="['fas', 'arrow-right-from-bracket']" />
+    <fa @click="logout" class="fa-sign-out" :icon="['fas', 'arrow-right-from-bracket']" />
   </header>
   <!-- storeのstate内のsideNavの状態を取得(Vuex) -->
   <SideNav v-if="$store.state.sideNav"/>
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+// Googleの認証機能、認証チェック機能をImport
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import 'normalize.css'
 // コンポーネンツからSideNavをインポート
 import SideNav from './components/SideNav.vue'
@@ -27,7 +29,20 @@ export default {
   },
   methods: {
     // mapActionsでstore内のactionsのtoggleSideNavを呼び出してくる
-    ...mapActions(['toggleSideNav'])
+    ...mapActions(['toggleSideNav', 'setLoginUser', 'logout', 'deleteLoginUser', 'fetchTasks'])
+  },
+  created() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Googleから取得したuserをStoreのsetLoginUserに渡す。
+        this.setLoginUser(user)
+        // ログインが成功したらFirestoreからデータを取得する。
+        this.fetchTasks()
+      } else {
+        this.deleteLoginUser()
+      }
+    });
   }
 }
 </script>

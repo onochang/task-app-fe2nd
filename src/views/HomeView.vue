@@ -4,15 +4,20 @@
       <h1 class="app-name">Daily To Do</h1>
       <div class="btn btn--white">
         <img class="btn__logo" src="../assets/google-logo.png" alt="">
-        <p class="btn__text">Googleアカウントでログイン</p>
+        <p class="btn__text" @click="login">Googleアカウントでログイン</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'HomeView',
+  methods: {
+    ...mapActions(['login'])
+  }
 }
 </script>
 
